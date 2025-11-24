@@ -40,6 +40,18 @@
     }
 }
 
+.scorecard-with-pins-frame-10-wrapper {
+    grid-column: 1 / -1;
+    display: flex;
+    justify-content: center;
+    margin-top: 0.5rem;
+}
+
+.scorecard-with-pins-frame.frame-10-multi {
+    flex: 0 0 auto;
+    width: auto;
+}
+
 .scorecard-with-pins-frame {
     border: 1px solid var(--bg-tertiary);
     min-width: 0;
@@ -48,29 +60,8 @@
     flex: 1;
 }
 
-/* Mobile: make frame 10 smaller to fit in grid */
-@media (max-width: 767px) {
-    .scorecard-with-pins-frame.frame-10-multi {
-        transform: scale(0.7);
-        transform-origin: center;
-    }
-
-    .scorecard-with-pins-frame.frame-10-multi .pin-deck {
-        padding: 2px;
-        min-height: 30px;
-    }
-
-    .scorecard-with-pins-frame.frame-10-multi .scorecard-pin {
-        width: 4px;
-        height: 4px;
-    }
-}
-
-/* Desktop: normal size */
-@media (min-width: 768px) {
-    .scorecard-with-pins-frame:not(:last-child) {
-        border-right: none;
-    }
+.scorecard-with-pins-frame:not(:last-child) {
+    border-right: none;
 }
 
 .frame-header {
@@ -83,11 +74,16 @@
 
 .pin-deck {
     display: grid;
-    grid-template-columns: repeat(7, 6px);
-    grid-template-rows: repeat(4, 7px);
-    gap: 0.5px;
-    padding: 4px;
-    min-height: 40px;
+    grid-template-columns: repeat(7, 3.2px);
+    /* Reduced by 20% from 4px */
+    grid-template-rows: repeat(4, 4px);
+    /* Reduced by 20% from 5px */
+    gap: 0.4px;
+    /* Reduced from 0.5px */
+    padding: 1.6px;
+    /* Reduced by 20% from 2px */
+    min-height: 22px;
+    /* Reduced by 20% from 28px */
     background-color: #4a5568;
     justify-content: center;
     align-content: center;
@@ -99,8 +95,10 @@
 }
 
 .scorecard-pin {
-    width: 6px;
-    height: 6px;
+    width: 3.2px;
+    /* Reduced by 20% from 4px */
+    height: 3.2px;
+    /* Reduced by 20% from 4px */
     border-radius: 50%;
     display: flex;
     align-items: center;
@@ -127,7 +125,8 @@
 
 .frame-rolls {
     display: flex;
-    height: 24px;
+    height: 14px;
+    /* Reduced by 20% from 18px */
     border-bottom: 1px solid var(--bg-tertiary);
 }
 
@@ -148,8 +147,10 @@
 .roll-box.split::before {
     content: '';
     position: absolute;
-    width: 18px;
-    height: 18px;
+    width: 11px;
+    /* Reduced by 20% from 14px */
+    height: 11px;
+    /* Reduced by 20% from 14px */
     border: 1px solid var(--accent-color);
     border-radius: 50%;
     pointer-events: none;
@@ -160,13 +161,15 @@
 }
 
 .frame-score {
-    height: 24px;
+    height: 14px;
+    /* Reduced by 20% from 18px */
     display: flex;
     align-items: center;
     justify-content: center;
     font-weight: bold;
     color: var(--accent-color);
-    font-size: 0.8rem;
+    font-size: 0.65rem;
+    /* Reduced by ~13% from 0.75rem */
 }
 
 .scorecard-frame.active-frame {
