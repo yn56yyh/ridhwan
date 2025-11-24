@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { LayoutDashboard, History, User } from 'lucide-react'
 import Home from './pages/Home'
 import GameSession from './pages/GameSession'
@@ -11,15 +11,36 @@ import SessionDashboard from './components/SessionDashboard'
 import GameHistory from './components/GameHistory'
 import StatisticsDashboard from './components/StatisticsDashboard'
 import Profile from './components/Profile'
+import Auth from './components/Auth'
 import { useGame } from './context/GameContext'
+import { supabase } from './utils/supabaseClient'
 
 function App() {
   const [activeView, setActiveView] = useState('home')
   const [viewStack, setViewStack] = useState([])
   const [eventContext, setEventContext] = useState(null)
   const [sessionContext, setSessionContext] = useState(null)
+  const [session, setSession] = useState(null)
+  const [loading, setLoading] = useState(true)
 
   const { createEvent, addSessionToEvent, getEventById } = useGame()
+
+  // Check for existing session on mount
+  useEffect(() => {
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      setSession(session)
+      setLoading(false)
+    })
+
+    // Listen for auth changes
+    const {
+      data: { subscription },
+    } = supabase.auth.onAuthStateChange((_event, session) => {
+      setSession(session)
+    })
+
+    return () => subscription.unsubscribe()
+  }, [])
 
   const pushView = (view, context = null) => {
     setViewStack(prev => [...prev, { view: activeView, context: eventContext }])
@@ -184,6 +205,27 @@ function App() {
         onComplete={handleSessionComplete}
       />
     )
+  }
+
+  // Show loading while checking auth
+  if (loading) {
+    return (
+      <div style={{
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        minHeight: '100vh',
+        background: 'var(--bg-primary)',
+        color: 'var(--text-primary)'
+      }}>
+        Loading...
+      </div>
+    )
+  }
+
+  // Show auth screen if not logged in
+  if (!session) {
+    return <Auth onAuthSuccess={(session) => setSession(session)} />
   }
 
   if (activeView === 'game-session') {
