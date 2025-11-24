@@ -79,10 +79,12 @@ function App() {
     }
   }
 
-  const handleCreateEvent = (type, name, bowlingAlley) => {
-    const newEvent = createEvent(type, name, bowlingAlley)
-    setEventContext({ eventId: newEvent.id })
-    setActiveView('league-detail')
+  const handleCreateEvent = async (type, name, bowlingAlley) => {
+    const newEvent = await createEvent(type, name, bowlingAlley)
+    if (newEvent) {
+      setEventContext({ eventId: newEvent.id })
+      setActiveView('league-detail')
+    }
   }
 
   const handleStartSession = (sessionData) => {
