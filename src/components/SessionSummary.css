@@ -1,0 +1,114 @@
+.session-summary-container {
+    min-height: 100vh;
+    background: var(--bg-primary);
+    padding: 2rem 1rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.session-summary-header {
+    text-align: center;
+    margin-bottom: 2rem;
+}
+
+.session-summary-header h1 {
+    margin: 1rem 0 0.5rem 0;
+    font-size: 2rem;
+}
+
+.session-date {
+    color: var(--text-secondary);
+    font-size: 1rem;
+}
+
+.session-stats-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1rem;
+    width: 100%;
+    max-width: 500px;
+    margin-bottom: 1.5rem;
+}
+
+.session-stats-grid:has(.stat-card-large) {
+    grid-template-columns: repeat(2, 1fr);
+}
+
+.session-stats-grid:has(.stat-card) {
+    grid-template-columns: repeat(3, 1fr);
+}
+
+.stat-card-large,
+.stat-card {
+    background: var(--bg-secondary);
+    border: 1px solid var(--bg-tertiary);
+    border-radius: 0.75rem;
+    padding: 1.5rem;
+    text-align: center;
+}
+
+.stat-label {
+    font-size: 0.875rem;
+    color: var(--text-secondary);
+    margin-bottom: 0.5rem;
+}
+
+.stat-value-large {
+    font-size: 3rem;
+    font-weight: bold;
+    color: var(--accent-color);
+}
+
+.stat-value {
+    font-size: 1.75rem;
+    font-weight: bold;
+    color: var(--accent-color);
+}
+
+.games-list {
+    width: 100%;
+    max-width: 500px;
+    background: var(--bg-secondary);
+    border: 1px solid var(--bg-tertiary);
+    border-radius: 0.75rem;
+    padding: 1.5rem;
+    margin-bottom: 2rem;
+}
+
+.games-list h3 {
+    margin: 0 0 1rem 0;
+    font-size: 1.25rem;
+}
+
+.game-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.75rem 0;
+    border-bottom: 1px solid var(--bg-tertiary);
+}
+
+.game-item:last-child {
+    border-bottom: none;
+}
+
+.game-number {
+    color: var(--text-secondary);
+    font-size: 0.9rem;
+}
+
+.game-score {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: var(--accent-color);
+}
+
+.session-summary-container .btn {
+    width: 100%;
+    max-width: 500px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+}

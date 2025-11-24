@@ -1,0 +1,118 @@
+.home-container {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    padding: 2rem 1rem;
+    background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+}
+
+.home-header {
+    text-align: center;
+    margin-bottom: 3rem;
+}
+
+.home-title {
+    font-size: 2.5rem;
+    font-weight: bold;
+    background: linear-gradient(135deg, #3b82f6 0%, #8b5cf6 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    margin-bottom: 0.5rem;
+}
+
+.home-subtitle {
+    color: var(--text-secondary);
+    font-size: 1rem;
+}
+
+.menu-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1rem;
+    max-width: 600px;
+    margin: 0 auto;
+    width: 100%;
+}
+
+.menu-card {
+    background: var(--bg-secondary);
+    border: 1px solid var(--bg-tertiary);
+    border-radius: 1rem;
+    padding: 2rem 1rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.75rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.menu-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: var(--card-color);
+    transform: scaleX(0);
+    transition: transform 0.3s ease;
+}
+
+.menu-card:hover {
+    transform: translateY(-4px);
+    border-color: var(--card-color);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
+}
+
+.menu-card:hover::before {
+    transform: scaleX(1);
+}
+
+.menu-card:active {
+    transform: translateY(-2px);
+}
+
+.menu-icon {
+    color: var(--card-color);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.05);
+    transition: all 0.3s ease;
+}
+
+.menu-card:hover .menu-icon {
+    background: rgba(255, 255, 255, 0.1);
+    transform: scale(1.1);
+}
+
+.menu-title {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin: 0;
+}
+
+.menu-description {
+    font-size: 0.875rem;
+    color: var(--text-secondary);
+    margin: 0;
+    text-align: center;
+}
+
+@media (max-width: 480px) {
+    .menu-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .home-title {
+        font-size: 2rem;
+    }
+}
