@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import { useGame } from '../context/GameContext';
 import { Line } from 'react-chartjs-2';
 import {
@@ -24,9 +24,25 @@ ChartJS.register(
 );
 
 const StatisticsDashboard = () => {
-    const { sessions } = useGame();
+    const { events } = useGame();
 
-    if (sessions.length === 0) {
+    // Aggregate all games from all events
+    const allGames = useMemo(() => {
+        const games = [];
+        events.forEach(event => {
+            event.sessions?.forEach(session => {
+                session.games?.forEach(game => {
+                    games.push({
+                        ...game,
+                        date: session.date
+                    });
+                });
+            });
+        });
+        return games.sort((a, b) => new Date(a.date) - new Date(b.date));
+    }, [events]);
+
+    if (allGames.length === 0) {
         return (
             <div className="card" style={{ textAlign: 'center', padding: '3rem 1rem' }}>
                 <p style={{ color: 'var(--text-secondary)' }}>Play some games to see your stats!</p>
@@ -35,21 +51,18 @@ const StatisticsDashboard = () => {
     }
 
     // Calculate Metrics
-    const totalGames = sessions.length;
-    const totalScore = sessions.reduce((sum, s) => sum + s.score, 0);
+    const totalGames = allGames.length;
+    const totalScore = allGames.reduce((sum, g) => sum + g.score, 0);
     const averageScore = Math.round(totalScore / totalGames);
-    const highScore = Math.max(...sessions.map(s => s.score));
+    const highScore = Math.max(...allGames.map(g => g.score));
 
     // Chart Data
-    // Sort sessions by date ascending for the chart
-    const sortedSessions = [...sessions].sort((a, b) => new Date(a.date) - new Date(b.date));
-
     const data = {
-        labels: sortedSessions.map(s => format(new Date(s.date), 'MMM d')),
+        labels: allGames.map(g => format(new Date(g.date), 'MMM d')),
         datasets: [
             {
                 label: 'Score',
-                data: sortedSessions.map(s => s.score),
+                data: allGames.map(g => g.score),
                 borderColor: '#3b82f6',
                 backgroundColor: 'rgba(59, 130, 246, 0.5)',
                 tension: 0.3,
@@ -59,6 +72,7 @@ const StatisticsDashboard = () => {
 
     const options = {
         responsive: true,
+        maintainAspectRatio: false,
         plugins: {
             legend: {
                 display: false,
@@ -71,10 +85,10 @@ const StatisticsDashboard = () => {
             y: {
                 beginAtZero: true,
                 grid: {
-                    color: '#333',
+                    color: 'rgba(255, 255, 255, 0.1)',
                 },
                 ticks: {
-                    color: '#a0a0a0',
+                    color: '#9ca3af',
                 }
             },
             x: {
@@ -82,7 +96,7 @@ const StatisticsDashboard = () => {
                     display: false,
                 },
                 ticks: {
-                    color: '#a0a0a0',
+                    color: '#9ca3af',
                 }
             }
         }
@@ -110,7 +124,7 @@ const StatisticsDashboard = () => {
                 </div>
             </div>
 
-            {/* Additional Stats Placeholder */}
+            {/* Additional Stats */}
             <div className="card">
                 <h3>Details</h3>
                 <div style={{ marginTop: '0.5rem', color: 'var(--text-secondary)', fontSize: '0.9rem' }}>

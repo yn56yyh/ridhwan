@@ -6,19 +6,23 @@
     margin-bottom: 1rem;
     padding: 0.25rem;
     box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.2);
+    -webkit-overflow-scrolling: touch;
+    /* Smooth scrolling on iOS */
 }
 
 .scorecard-with-pins-scroll {
     display: grid;
     width: 100%;
+    min-width: 600px;
+    /* Ensure minimum width for readability */
 }
 
 .scorecard-with-pins-scroll.grid-9 {
-    grid-template-columns: repeat(9, 1fr);
+    grid-template-columns: repeat(9, minmax(60px, 1fr));
 }
 
 .scorecard-with-pins-scroll.grid-10 {
-    grid-template-columns: repeat(10, 1fr);
+    grid-template-columns: repeat(10, minmax(60px, 1fr));
 }
 
 .scorecard-with-pins-frame-10-wrapper {
