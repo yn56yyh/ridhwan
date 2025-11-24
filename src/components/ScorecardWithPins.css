@@ -51,7 +51,7 @@
 /* Mobile: make frame 10 smaller to fit in grid */
 @media (max-width: 767px) {
     .scorecard-with-pins-frame.frame-10-multi {
-        transform: scale(0.85);
+        transform: scale(0.7);
         transform-origin: center;
     }
 
