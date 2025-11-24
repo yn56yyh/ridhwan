@@ -343,22 +343,20 @@ const ScorecardWithPins = ({ frames, currentFrame, currentBall }) => {
                     );
 
                     if (hasMultipleDecks) {
-                        // Render Frame 10 on its own row when it has multiple decks
+                        // Render Frame 10 in grid (will be scaled down on mobile)
                         return (
-                            <div className="scorecard-with-pins-frame-10-wrapper">
-                                <div className={`scorecard-with-pins-frame frame-10-multi ${isActiveFrame ? 'active-frame' : ''}`}>
-                                    <div className="frame-header">{frame10.frameNum}</div>
+                            <div key={frame10.frameNum} className={`scorecard-with-pins-frame frame-10-multi ${isActiveFrame ? 'active-frame' : ''}`}>
+                                <div className="frame-header">{frame10.frameNum}</div>
 
-                                    {renderFrame10PinDecks(actualFrame10)}
+                                {renderFrame10PinDecks(actualFrame10)}
 
-                                    <div className="frame-rolls">
-                                        <div className={`roll-box ${frame10.isSplit ? 'split' : ''} ${isActiveFrame && currentBall === 1 ? 'active-shot' : ''}`}>{frame10.b1}</div>
-                                        <div className={`roll-box ${isActiveFrame && currentBall === 2 ? 'active-shot' : ''}`}>{frame10.b2}</div>
-                                        <div className={`roll-box ${isActiveFrame && currentBall === 3 ? 'active-shot' : ''}`}>{frame10.b3}</div>
-                                    </div>
-                                    <div className="frame-score">
-                                        {frame10.cumulativeScore}
-                                    </div>
+                                <div className="frame-rolls">
+                                    <div className={`roll-box ${frame10.isSplit ? 'split' : ''} ${isActiveFrame && currentBall === 1 ? 'active-shot' : ''}`}>{frame10.b1}</div>
+                                    <div className={`roll-box ${isActiveFrame && currentBall === 2 ? 'active-shot' : ''}`}>{frame10.b2}</div>
+                                    <div className={`roll-box ${isActiveFrame && currentBall === 3 ? 'active-shot' : ''}`}>{frame10.b3}</div>
+                                </div>
+                                <div className="frame-score">
+                                    {frame10.cumulativeScore}
                                 </div>
                             </div>
                         );
