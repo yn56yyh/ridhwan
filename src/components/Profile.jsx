@@ -1,68 +1,151 @@
-import React from 'react';
-import { useGame } from '../context/GameContext';
-import { User, Trash2, Database } from 'lucide-react';
+import React, { useState, useEffect } from 'react';
+import { supabase } from '../utils/supabaseClient';
+import { User, Mail, LogOut, Calendar } from 'lucide-react';
+import { format } from 'date-fns';
 
 const Profile = () => {
-    const { sessions } = useGame();
+    const [user, setUser] = useState(null);
+    const [loading, setLoading] = useState(true);
 
-    const handleClearData = () => {
-        if (confirm('WARNING: This will delete ALL your game history. This action cannot be undone. Are you sure?')) {
-            localStorage.removeItem('bowling_sessions');
-            window.location.reload();
+    useEffect(() => {
+        getUser();
+    }, []);
+
+    const getUser = async () => {
+        try {
+            const { data: { user } } = await supabase.auth.getUser();
+            setUser(user);
+        } catch (error) {
+            console.error('Error fetching user:', error);
+        } finally {
+            setLoading(false);
         }
     };
 
-    // Calculate stats
-    const totalGames = sessions.length;
-    const totalScore = sessions.reduce((sum, s) => sum + s.score, 0);
-    const averageScore = totalGames > 0 ? Math.round(totalScore / totalGames) : 0;
-    const highScore = totalGames > 0 ? Math.max(...sessions.map(s => s.score)) : 0;
+    const handleSignOut = async () => {
+        try {
+            await supabase.auth.signOut();
+            window.location.reload(); // Reload to show auth screen
+        } catch (error) {
+            console.error('Error signing out:', error);
+        }
+    };
+
+    if (loading) {
+        return (
+            <div className="card" style={{ textAlign: 'center', padding: '3rem 1rem' }}>
+                <p style={{ color: 'var(--text-secondary)' }}>Loading...</p>
+            </div>
+        );
+    }
 
     return (
-        <div className="container" style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-            <div className="card" style={{ textAlign: 'center', padding: '2rem' }}>
-                <div style={{
-                    width: '80px', height: '80px', borderRadius: '50%', backgroundColor: 'var(--bg-tertiary)',
-                    margin: '0 auto 1rem', display: 'flex', alignItems: 'center', justifyContent: 'center'
-                }}>
-                    <User size={40} color="var(--accent-color)" />
-                </div>
-                <h2>Local User</h2>
-                <p style={{ color: 'var(--text-secondary)' }}>Member since {new Date().getFullYear()}</p>
-            </div>
-
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+            {/* User Info Card */}
             <div className="card">
-                <h3>Career Stats</h3>
-                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem', marginTop: '1rem' }}>
-                    <div>
-                        <div style={{ fontSize: '0.8rem', color: 'var(--text-secondary)' }}>Games Bowled</div>
-                        <div style={{ fontSize: '1.2rem', fontWeight: 'bold' }}>{totalGames}</div>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', marginBottom: '1.5rem' }}>
+                    <div style={{
+                        width: '60px',
+                        height: '60px',
+                        borderRadius: '50%',
+                        background: 'linear-gradient(135deg, var(--accent-color), var(--success-color))',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center'
+                    }}>
+                        <User size={32} color="white" />
                     </div>
-                    <div>
-                        <div style={{ fontSize: '0.8rem', color: 'var(--text-secondary)' }}>Average</div>
-                        <div style={{ fontSize: '1.2rem', fontWeight: 'bold' }}>{averageScore}</div>
-                    </div>
-                    <div>
-                        <div style={{ fontSize: '0.8rem', color: 'var(--text-secondary)' }}>High Score</div>
-                        <div style={{ fontSize: '1.2rem', fontWeight: 'bold' }}>{highScore}</div>
+                    <div style={{ flex: 1 }}>
+                        <h2 style={{ margin: 0, fontSize: '1.5rem' }}>Profile</h2>
+                        <p style={{ margin: '0.25rem 0 0 0', color: 'var(--text-secondary)', fontSize: '0.875rem' }}>
+                            Manage your account
+                        </p>
                     </div>
                 </div>
+
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+                    {/* Email */}
+                    <div style={{
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: '0.75rem',
+                        padding: '0.75rem',
+                        background: 'var(--bg-tertiary)',
+                        borderRadius: '0.5rem'
+                    }}>
+                        <Mail size={20} color="var(--accent-color)" />
+                        <div>
+                            <div style={{ fontSize: '0.75rem', color: 'var(--text-secondary)' }}>Email</div>
+                            <div style={{ fontSize: '0.95rem', color: 'var(--text-primary)' }}>{user?.email}</div>
+                        </div>
+                    </div>
+
+                    {/* User ID */}
+                    <div style={{
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: '0.75rem',
+                        padding: '0.75rem',
+                        background: 'var(--bg-tertiary)',
+                        borderRadius: '0.5rem'
+                    }}>
+                        <User size={20} color="var(--accent-color)" />
+                        <div>
+                            <div style={{ fontSize: '0.75rem', color: 'var(--text-secondary)' }}>User ID</div>
+                            <div style={{ fontSize: '0.75rem', color: 'var(--text-primary)', fontFamily: 'monospace' }}>
+                                {user?.id?.substring(0, 8)}...
+                            </div>
+                        </div>
+                    </div>
+
+                    {/* Account Created */}
+                    <div style={{
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: '0.75rem',
+                        padding: '0.75rem',
+                        background: 'var(--bg-tertiary)',
+                        borderRadius: '0.5rem'
+                    }}>
+                        <Calendar size={20} color="var(--accent-color)" />
+                        <div>
+                            <div style={{ fontSize: '0.75rem', color: 'var(--text-secondary)' }}>Member Since</div>
+                            <div style={{ fontSize: '0.95rem', color: 'var(--text-primary)' }}>
+                                {user?.created_at ? format(new Date(user.created_at), 'MMM d, yyyy') : 'N/A'}
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
 
-            <div className="card">
-                <h3>Data Management</h3>
-                <button
-                    onClick={handleClearData}
-                    className="btn"
-                    style={{
-                        width: '100%', marginTop: '1rem',
-                        backgroundColor: 'rgba(239, 68, 68, 0.1)',
-                        color: 'var(--danger-color)',
-                        display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.5rem'
-                    }}
-                >
-                    <Trash2 size={18} /> Clear All Data
-                </button>
+            {/* Sign Out Button */}
+            <button
+                onClick={handleSignOut}
+                className="btn"
+                style={{
+                    background: '#ef4444',
+                    color: 'white',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    gap: '0.5rem',
+                    padding: '1rem',
+                    fontSize: '1rem',
+                    fontWeight: '600'
+                }}
+            >
+                <LogOut size={20} />
+                Sign Out
+            </button>
+
+            {/* App Info */}
+            <div className="card" style={{ textAlign: 'center', padding: '1rem' }}>
+                <p style={{ margin: 0, fontSize: '0.875rem', color: 'var(--text-secondary)' }}>
+                    Bowling Performance Tracker
+                </p>
+                <p style={{ margin: '0.25rem 0 0 0', fontSize: '0.75rem', color: 'var(--text-secondary)' }}>
+                    Version 1.0.0
+                </p>
             </div>
         </div>
     );
