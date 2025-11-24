@@ -1,11 +1,11 @@
 import React from 'react';
 import { useGame } from '../context/GameContext';
-import { ArrowLeft, Plus, Calendar, MapPin, Target, BarChart2 } from 'lucide-react';
+import { ArrowLeft, Plus, Calendar, MapPin, Target, BarChart2, Trash2 } from 'lucide-react';
 import { format } from 'date-fns';
 import './LeagueDetail.css';
 
 const LeagueDetail = ({ eventId, onBack, onAddSession, onSessionClick }) => {
-    const { getEventById } = useGame();
+    const { getEventById, deleteEvent, deleteSession } = useGame();
     const event = getEventById(eventId);
 
     if (!event) {
@@ -31,6 +31,19 @@ const LeagueDetail = ({ eventId, onBack, onAddSession, onSessionClick }) => {
         return Math.max(max, sessionMax);
     }, 0);
 
+    const handleDeleteEvent = async () => {
+        if (window.confirm(`Are you sure you want to delete "${event.name}"? This will delete all sessions and games.`)) {
+            await deleteEvent(eventId);
+            onBack();
+        }
+    };
+
+    const handleDeleteSession = async (sessionId) => {
+        if (window.confirm('Are you sure you want to delete this session?')) {
+            await deleteSession(sessionId);
+        }
+    };
+
     return (
         <div className="league-detail-container">
             <header className="league-detail-header">
@@ -38,6 +51,22 @@ const LeagueDetail = ({ eventId, onBack, onAddSession, onSessionClick }) => {
                     <ArrowLeft size={24} />
                 </button>
                 <h1>{event.name}</h1>
+                <button
+                    className="delete-button"
+                    onClick={handleDeleteEvent}
+                    style={{
+                        background: 'none',
+                        border: 'none',
+                        color: '#ef4444',
+                        cursor: 'pointer',
+                        padding: '0.5rem',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center'
+                    }}
+                >
+                    <Trash2 size={20} />
+                </button>
             </header>
 
             <div className="event-meta">
@@ -87,6 +116,24 @@ const LeagueDetail = ({ eventId, onBack, onAddSession, onSessionClick }) => {
                                 <div className="session-header">
                                     <Calendar size={16} />
                                     <span>{format(new Date(session.date), 'MMM d, yyyy')}</span>
+                                    <button
+                                        onClick={(e) => {
+                                            e.stopPropagation();
+                                            handleDeleteSession(session.id);
+                                        }}
+                                        style={{
+                                            background: 'none',
+                                            border: 'none',
+                                            color: '#ef4444',
+                                            cursor: 'pointer',
+                                            padding: '0.25rem',
+                                            marginLeft: 'auto',
+                                            display: 'flex',
+                                            alignItems: 'center'
+                                        }}
+                                    >
+                                        <Trash2 size={16} />
+                                    </button>
                                 </div>
                                 <div className="session-games">
                                     {session.games.map((game, gameIndex) => (
