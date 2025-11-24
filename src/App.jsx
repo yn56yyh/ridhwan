@@ -134,6 +134,27 @@ function App() {
     setActiveView('league-detail')
   }
 
+  // Show loading while checking auth
+  if (loading) {
+    return (
+      <div style={{
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        minHeight: '100vh',
+        background: 'var(--bg-primary)',
+        color: 'var(--text-primary)'
+      }}>
+        Loading...
+      </div>
+    )
+  }
+
+  // Show auth screen if not logged in
+  if (!session) {
+    return <Auth onAuthSuccess={(session) => setSession(session)} />
+  }
+
   // Full-screen views (no bottom nav)
   if (activeView === 'home') {
     return <Home onNavigate={handleHomeNavigation} />
@@ -205,27 +226,6 @@ function App() {
         onComplete={handleSessionComplete}
       />
     )
-  }
-
-  // Show loading while checking auth
-  if (loading) {
-    return (
-      <div style={{
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        minHeight: '100vh',
-        background: 'var(--bg-primary)',
-        color: 'var(--text-primary)'
-      }}>
-        Loading...
-      </div>
-    )
-  }
-
-  // Show auth screen if not logged in
-  if (!session) {
-    return <Auth onAuthSuccess={(session) => setSession(session)} />
   }
 
   if (activeView === 'game-session') {
