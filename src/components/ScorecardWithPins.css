@@ -40,18 +40,6 @@
     }
 }
 
-.scorecard-with-pins-frame-10-wrapper {
-    grid-column: 1 / -1;
-    display: flex;
-    justify-content: center;
-    margin-top: 0.5rem;
-}
-
-.scorecard-with-pins-frame.frame-10-multi {
-    flex: 0 0 auto;
-    width: auto;
-}
-
 .scorecard-with-pins-frame {
     border: 1px solid var(--bg-tertiary);
     min-width: 0;
@@ -60,8 +48,29 @@
     flex: 1;
 }
 
-.scorecard-with-pins-frame:not(:last-child) {
-    border-right: none;
+/* Mobile: make frame 10 smaller to fit in grid */
+@media (max-width: 767px) {
+    .scorecard-with-pins-frame.frame-10-multi {
+        transform: scale(0.85);
+        transform-origin: center;
+    }
+
+    .scorecard-with-pins-frame.frame-10-multi .pin-deck {
+        padding: 2px;
+        min-height: 30px;
+    }
+
+    .scorecard-with-pins-frame.frame-10-multi .scorecard-pin {
+        width: 4px;
+        height: 4px;
+    }
+}
+
+/* Desktop: normal size */
+@media (min-width: 768px) {
+    .scorecard-with-pins-frame:not(:last-child) {
+        border-right: none;
+    }
 }
 
 .frame-header {
